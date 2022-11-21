@@ -2,6 +2,7 @@ package controller
 
 import (
 	"ginDemo/common"
+	"ginDemo/dto"
 	"ginDemo/model"
 	"ginDemo/util"
 	"github.com/gin-gonic/gin"
@@ -105,7 +106,12 @@ func Login(context *gin.Context) {
 	}
 
 	//发放token
-	token := "11" //目前先写死数据
+	//token := "11" //目前先写死数据
+	token, err := common.ReleaseToken(user)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统异常"})
+		return
+	}
 
 	//返回结果
 	context.JSON(200, gin.H{
@@ -124,4 +130,12 @@ func isTelephoneExist(db *gorm.DB, telephone string) bool { //查询手机号
 		return true
 	}
 	return false
+}
+
+func Info(ctx *gin.Context) { //获取用户信息
+	user, _ := ctx.Get("user")
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"data": gin.H{"user": dto.ToUserDto(user.(model.User))},
+	})
 }
