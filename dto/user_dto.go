@@ -2,7 +2,7 @@ package dto
 
 import "ginDemo/model"
 
-type UserDto struct {
+type UserDto struct { // 只返回给前端名称和手机号
 	Name      string `json:"name"`
 	Telephone string `json:"telephone"`
 }
